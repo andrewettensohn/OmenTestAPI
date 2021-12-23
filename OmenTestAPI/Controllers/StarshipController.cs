@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using OmenModels;
-using OmenModels.Interfaces;
 using OmenTestAPI.Interfaces;
 
 namespace OmenTestAPI.Controllers
@@ -16,7 +15,7 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpPost("StarshipClass")]
-        public IActionResult AddStarshipClass(StarshipClass starshipClass)
+        public async Task<IActionResult> AddStarshipClass(StarshipClass starshipClass)
         {
             try
             {
@@ -25,7 +24,7 @@ namespace OmenTestAPI.Controllers
                     return BadRequest("Model was null.");
                 }
 
-                _omenRepository.AddBaseModel(starshipClass);
+                await _omenRepository.Create(starshipClass);
 
                 return Ok();
             }
@@ -36,7 +35,7 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpPost("StarshipHull")]
-        public IActionResult AddStarshipHull(StarshipHull hull)
+        public async Task<IActionResult> AddStarshipHull(StarshipHull hull)
         {
             try
             {
@@ -45,7 +44,7 @@ namespace OmenTestAPI.Controllers
                     return BadRequest("Model was null.");
                 }
 
-                _omenRepository.AddBaseModel(hull);
+                await _omenRepository.Create(hull);
 
                 return Ok();
             }
@@ -56,7 +55,7 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpPost("ShipModule")]
-        public IActionResult AddStarshipHull(ShipModule module)
+        public async Task<IActionResult> AddShipModule(ShipModule module)
         {
             try
             {
@@ -65,7 +64,7 @@ namespace OmenTestAPI.Controllers
                     return BadRequest("Model was null.");
                 }
 
-                _omenRepository.AddBaseModel(module);
+                await _omenRepository.Create(module);
 
                 return Ok();
             }
@@ -76,7 +75,7 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpPost("Starship")]
-        public IActionResult AddOrUpdateStarship(Starship ship)
+        public async Task<IActionResult> AddOrUpdateStarship(Starship ship)
         {
             try
             {
@@ -85,7 +84,14 @@ namespace OmenTestAPI.Controllers
                     return BadRequest("Model was null.");
                 }
 
-                _omenRepository.UpdateBaseModel(ship);
+                if(ship.Id == null)
+                {
+                    await _omenRepository.Create(ship);
+                }
+                else
+                {
+                    await _omenRepository.Replace(ship);
+                }
 
                 return Ok();
             }
@@ -96,11 +102,12 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpGet("ShipModuleList")]
-        public IActionResult GetShipModuleList()
+        public async Task<IActionResult> GetShipModuleList()
         {
             try
             {
-                return Ok(_omenRepository.GetBaseModelList<ShipModule>());
+                List<ShipModule> modules = await _omenRepository.GetShipModuleListAsync();
+                return Ok(modules);
             }
             catch(Exception ex)
             {
@@ -109,11 +116,12 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpGet("StarshipClassList")]
-        public IActionResult GetStarshipClassList()
+        public async Task<IActionResult> GetStarshipClassList()
         {
             try
             {
-                return Ok(_omenRepository.GetBaseModelList<StarshipClass>());
+                List<StarshipClass> classes = await _omenRepository.GetStarshipClassListAsync();
+                return Ok(classes);
             }
             catch (Exception ex)
             {
@@ -122,11 +130,12 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpGet("StarshipHullList")]
-        public IActionResult GetStarshipHullList()
+        public async Task<IActionResult> GetStarshipHullList()
         {
             try
             {
-                return Ok(_omenRepository.GetBaseModelList<StarshipHull>());
+                List<StarshipHull> hulls = await _omenRepository.GetStarshipHullListAsync();
+                return Ok(hulls);
             }
             catch (Exception ex)
             {
@@ -135,11 +144,12 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpGet("StarshipList")]
-        public IActionResult GetStarshipList()
+        public async Task<IActionResult> GetStarshipList()
         {
             try
             {
-                return Ok(_omenRepository.GetStarshipList());
+                List<Starship> ships = await _omenRepository.GetStarshipListAsync();
+                return Ok(ships);
             }
             catch (Exception ex)
             {
