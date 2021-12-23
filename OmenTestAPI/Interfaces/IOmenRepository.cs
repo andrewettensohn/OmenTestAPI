@@ -1,16 +1,22 @@
 ﻿using OmenModels;
-using OmenModels.Interfaces;
 
 namespace OmenTestAPI.Interfaces
 {
     public interface IOmenRepository
     {
-        void AddBaseModel<T>(T model) where T : class, IGuidId;
+        //Get List
+        Task<List<Starship>> GetStarshipListAsync();
+        Task<List<ShipModule>> GetShipModuleListAsync();
+        Task<List<StarshipClass>> GetStarshipClassListAsync();
+        Task<List<StarshipHull>> GetStarshipHullListAsync();
 
-        List<T> GetBaseModelList<T>() where T : class, IGuidId;
+        //Create One
+        Task Create(Starship item);
+        Task Create(ShipModule item);
+        Task Create(StarshipClass item);
+        Task Create(StarshipHull item);
 
-        void UpdateBaseModel<T>(T model) where T : class, IGuidId;
-
-        List<Starship> GetStarshipList();
+        //Replace
+        Task Replace(Starship item);
     }
 }

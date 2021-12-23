@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using OmenTestAPI;
 using OmenTestAPI.Data;
 using OmenTestAPI.Interfaces;
@@ -7,10 +6,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<OmenContext>(options => options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IOmenRepository, OmenRepository>();
 
 builder.Services.AddCors(options =>

@@ -1,37 +1,43 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MongoDB.Driver;
 using OmenModels;
-using OmenModels.Interfaces;
 using OmenTestAPI.Interfaces;
 
 namespace OmenTestAPI.Data
 {
     public class OmenRepository : IOmenRepository
     {
-        private readonly OmenContext _context;
-        public OmenRepository(OmenContext context)
+        private readonly IMongoCollection<Starship> _starshipCollection;
+        private readonly IMongoCollection<ShipModule> _moduleCollection;
+        private readonly IMongoCollection<StarshipHull> _starshipHullCollection;
+        private readonly IMongoCollection<StarshipClass> _starshipClassCollection;
+
+        private readonly ReplaceOptions _replaceOptions = new ReplaceOptions { IsUpsert = true };
+
+        public OmenRepository()
         {
-            _context = context;
+            MongoClientSettings settings = MongoClientSettings.FromConnectionString("mongodb+srv://test-user:msA1JZRmi9Y27IIB@cluster0.1umer.mongodb.net/test?retryWrites=true&w=majority");
+            MongoClient client = new MongoClient(settings);
+            IMongoDatabase database = client.GetDatabase("test");
+
+            _starshipCollection = database.GetCollection<Starship>(nameof(Starship));
+            _moduleCollection = database.GetCollection<ShipModule>(nameof(ShipModule));
+            _starshipHullCollection = database.GetCollection<StarshipHull>(nameof(StarshipHull));
+            _starshipClassCollection = database.GetCollection<StarshipClass>(nameof(StarshipClass));
         }
 
-        public DbSet<T> GetTable<T>() where T : class, IGuidId => _context.Set<T>();
+        //Get List
+        public async Task<List<Starship>> GetStarshipListAsync() => await _starshipCollection.Find(_ => true).ToListAsync();
+        public async Task<List<ShipModule>> GetShipModuleListAsync() => await _moduleCollection.Find(_ => true).ToListAsync();
+        public async Task<List<StarshipClass>> GetStarshipClassListAsync() => await _starshipClassCollection.Find(_ => true).ToListAsync();
+        public async Task<List<StarshipHull>> GetStarshipHullListAsync() => await _starshipHullCollection.Find(_ => true).ToListAsync();
 
-        public void AddBaseModel<T>(T model) where T : class, IGuidId
-        {
-            GetTable<T>().Add(model);
-            _context.SaveChanges();
-        }
+        //Create One
+        public async Task Create(Starship item) => await _starshipCollection.InsertOneAsync(item);
+        public async Task Create(ShipModule item) => await _moduleCollection.InsertOneAsync(item);
+        public async Task Create(StarshipClass item) => await _starshipClassCollection.InsertOneAsync(item);
+        public async Task Create(StarshipHull item) => await _starshipHullCollection.InsertOneAsync(item);
 
-        public void UpdateBaseModel<T>(T model) where T : class, IGuidId
-        {
-            GetTable<T>().Update(model);
-            _context.SaveChanges();
-        }
-
-        public List<T> GetBaseModelList<T>() where T : class, IGuidId => GetTable<T>().ToList();
-
-        public List<Starship> GetStarshipList()
-        {
-            return _context.Starships.Include(x => x.Modules).Include(x => x.StarshipClass).Include(x => x.Hull).ToList();
-        }
+        //Replace
+        public async Task Replace(Starship item) => await _starshipCollection.ReplaceOneAsync(x => x.Id == item.Id, item, _replaceOptions);
     }
 }
