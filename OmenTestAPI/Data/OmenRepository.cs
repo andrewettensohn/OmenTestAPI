@@ -32,7 +32,12 @@ namespace OmenTestAPI.Data
         public async Task<List<StarshipHull>> GetStarshipHullListAsync() => await _starshipHullCollection.Find(_ => true).ToListAsync();
 
         //Create One
-        public async Task Create(Starship item) => await _starshipCollection.InsertOneAsync(item);
+        public async Task<Starship> Create(Starship item)
+        {
+            await _starshipCollection.InsertOneAsync(item);
+            return item;
+        }
+
         public async Task Create(ShipModule item) => await _moduleCollection.InsertOneAsync(item);
         public async Task Create(StarshipClass item) => await _starshipClassCollection.InsertOneAsync(item);
         public async Task Create(StarshipHull item) => await _starshipHullCollection.InsertOneAsync(item);

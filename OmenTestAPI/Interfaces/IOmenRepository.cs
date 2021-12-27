@@ -11,7 +11,7 @@ namespace OmenTestAPI.Interfaces
         Task<List<StarshipHull>> GetStarshipHullListAsync();
 
         //Create One
-        Task Create(Starship item);
+        Task<Starship> Create(Starship item);
         Task Create(ShipModule item);
         Task Create(StarshipClass item);
         Task Create(StarshipHull item);

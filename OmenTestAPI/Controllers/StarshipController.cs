@@ -86,14 +86,14 @@ namespace OmenTestAPI.Controllers
 
                 if(ship.Id == null)
                 {
-                    await _omenRepository.Create(ship);
+                    ship = await _omenRepository.Create(ship);
+                    return Ok(ship);
                 }
                 else
                 {
                     await _omenRepository.Replace(ship);
+                    return Ok();
                 }
-
-                return Ok();
             }
             catch (Exception ex)
             {
