@@ -13,9 +13,9 @@ namespace OmenTestAPI.Data
 
         private readonly ReplaceOptions _replaceOptions = new ReplaceOptions { IsUpsert = true };
 
-        public OmenRepository()
+        public OmenRepository(IConfiguration config)
         {
-            MongoClientSettings settings = MongoClientSettings.FromConnectionString("mongodb+srv://test-user:msA1JZRmi9Y27IIB@cluster0.1umer.mongodb.net/test?retryWrites=true&w=majority");
+            MongoClientSettings settings = MongoClientSettings.FromConnectionString(config["Global:ConnectionStrings:OmenTestDb"]);
             MongoClient client = new MongoClient(settings);
             IMongoDatabase database = client.GetDatabase("test");
 

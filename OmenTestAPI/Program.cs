@@ -5,6 +5,7 @@ using OmenTestAPI.Interfaces;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
+builder.Configuration.AddJsonFile("C:\\APPLICATIONS\\Configuration\\Global.json");
 
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 builder.Services.AddEndpointsApiExplorer();
