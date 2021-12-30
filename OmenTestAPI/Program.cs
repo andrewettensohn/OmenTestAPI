@@ -17,9 +17,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy(Constants.AllowSpecificOrigins,
     builder =>
     {
+        builder.WithOrigins("http://omentestui.jessepecar.com")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+
         builder.WithOrigins("https://localhost:5001")
-        .AllowAnyMethod()
-        .AllowAnyHeader();
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
