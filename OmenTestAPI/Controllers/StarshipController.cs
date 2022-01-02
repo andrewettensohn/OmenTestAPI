@@ -55,7 +55,7 @@ namespace OmenTestAPI.Controllers
         }
 
         [HttpPost("ShipModule")]
-        public async Task<IActionResult> AddShipModule(ShipModule module)
+        public async Task<IActionResult> AddOrUpdateShipModule(ShipModule module)
         {
             try
             {
@@ -64,9 +64,17 @@ namespace OmenTestAPI.Controllers
                     return BadRequest("Model was null.");
                 }
 
-                await _omenRepository.Create(module);
-
-                return Ok();
+                if(module.Id == null)
+                {
+                    await _omenRepository.Create(module);
+                    return Ok(module);
+                }
+                else
+                {
+                    await _omenRepository.Replace(module);
+                    UpdateStarshipsForModuleChange(module);
+                    return Ok(module);
+                }
             }
             catch (Exception ex)
             {
@@ -92,8 +100,23 @@ namespace OmenTestAPI.Controllers
                 else
                 {
                     await _omenRepository.Replace(ship);
-                    return Ok();
+                    return Ok(ship);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpDelete("Starship/{id}")]
+        public async Task<IActionResult> DeleteStarship(string id)
+        {
+            try
+            {
+                await _omenRepository.DeleteStarshipById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -155,6 +178,25 @@ namespace OmenTestAPI.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        private async Task UpdateStarshipsForModuleChange(ShipModule module)
+        {
+            List<Starship> ships = await _omenRepository.GetStarshipListAsync();
+
+            ships.ForEach(async ship =>
+            {
+                if (ship.Modules.Any(x => x.Id == module.Id))
+                {
+                    int removedModules = ship.Modules.RemoveAll(x => x.Id == module.Id);
+                    for (int i = 0; i < removedModules; i++)
+                    {
+                        ship.Modules.Add(module);
+                    }
+
+                    await _omenRepository.Replace(ship);
+                }
+            });
         }
     }
 }

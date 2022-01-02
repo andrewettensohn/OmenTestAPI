@@ -44,5 +44,9 @@ namespace OmenTestAPI.Data
 
         //Replace
         public async Task Replace(Starship item) => await _starshipCollection.ReplaceOneAsync(x => x.Id == item.Id, item, _replaceOptions);
+        public async Task Replace(ShipModule item) => await _moduleCollection.ReplaceOneAsync(x => x.Id == item.Id, item, _replaceOptions);
+
+        //Delete
+        public async Task DeleteStarshipById(string id) => await _starshipCollection.DeleteOneAsync(x => x.Id == id);
     }
 }
