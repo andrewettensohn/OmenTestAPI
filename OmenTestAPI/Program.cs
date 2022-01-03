@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(Constants.AllowSpecificOrigins,
     builder =>
     {
-        builder.WithOrigins("http://omentestui.jessepecar.com")
+        builder.WithOrigins("https://omentestui.jessepecar.com")
             .AllowAnyMethod()
             .AllowAnyHeader();
 
