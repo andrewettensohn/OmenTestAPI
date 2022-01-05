@@ -113,7 +113,7 @@ namespace OmenTestAPI.Controllers
             }
         }
 
-        [HttpDelete("Starship/{id}")]
+        [HttpPost("Starship/{id}")]
         public async Task<IActionResult> DeleteStarship(string id)
         {
             try
