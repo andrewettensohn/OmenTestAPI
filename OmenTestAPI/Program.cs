@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
     builder =>
     {
         builder.WithOrigins("https://omentestui.jessepecar.com")
-            .AllowAnyMethod()
+            .WithMethods("PUT", "DELETE", "GET", "POST")
             .AllowAnyHeader();
 
         builder.WithOrigins("https://localhost:5001")
