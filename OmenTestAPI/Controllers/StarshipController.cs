@@ -72,7 +72,7 @@ namespace OmenTestAPI.Controllers
                 else
                 {
                     await _omenRepository.Replace(module);
-                    UpdateStarshipsForModuleChange(module);
+                    await UpdateStarshipsForModuleChange(module);
                     return Ok(module);
                 }
             }
@@ -94,6 +94,10 @@ namespace OmenTestAPI.Controllers
 
                 if(ship.Id == null)
                 {
+                    List<Starship> duplicateStarships = await _omenRepository.GetStarshipByFilter(x => x.Name == ship.Name);
+
+                    if (duplicateStarships.Any()) return BadRequest("Unable to create new ship. A ship with this name already exists.");
+
                     ship = await _omenRepository.Create(ship);
                     return Ok(ship);
                 }

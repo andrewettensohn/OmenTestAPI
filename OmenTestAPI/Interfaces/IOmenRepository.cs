@@ -1,4 +1,5 @@
 ﻿using OmenModels;
+using System.Linq.Expressions;
 
 namespace OmenTestAPI.Interfaces
 {
@@ -9,6 +10,9 @@ namespace OmenTestAPI.Interfaces
         Task<List<ShipModule>> GetShipModuleListAsync();
         Task<List<StarshipClass>> GetStarshipClassListAsync();
         Task<List<StarshipHull>> GetStarshipHullListAsync();
+
+        //Filter
+        Task<List<Starship>> GetStarshipByFilter(Expression<Func<Starship, bool>> filter);
 
         //Create One
         Task<Starship> Create(Starship item);

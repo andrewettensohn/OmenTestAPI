@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using OmenModels;
 using OmenTestAPI.Interfaces;
+using System.Linq.Expressions;
 
 namespace OmenTestAPI.Data
 {
@@ -30,6 +31,9 @@ namespace OmenTestAPI.Data
         public async Task<List<ShipModule>> GetShipModuleListAsync() => await _moduleCollection.Find(_ => true).ToListAsync();
         public async Task<List<StarshipClass>> GetStarshipClassListAsync() => await _starshipClassCollection.Find(_ => true).ToListAsync();
         public async Task<List<StarshipHull>> GetStarshipHullListAsync() => await _starshipHullCollection.Find(_ => true).ToListAsync();
+
+        //Get by filter
+        public async Task<List<Starship>> GetStarshipByFilter(Expression<Func<Starship, bool>> filter) => await _starshipCollection.Find(filter).ToListAsync();
 
         //Create One
         public async Task<Starship> Create(Starship item)
