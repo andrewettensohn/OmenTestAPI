@@ -26,5 +26,6 @@ namespace OmenTestAPI.Interfaces
 
         //Delete
         Task DeleteStarshipById(string id);
+        Task DeleteShipModuleById(string id);
     }
 }

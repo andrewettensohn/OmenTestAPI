@@ -113,12 +113,27 @@ namespace OmenTestAPI.Controllers
             }
         }
 
-        [HttpPost("Starship/{id}")]
+        [HttpPost("Starship/Delete/{id}")]
         public async Task<IActionResult> DeleteStarship(string id)
         {
             try
             {
                 await _omenRepository.DeleteStarshipById(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("ShipModule/Delete/{id}")]
+        public async Task<IActionResult> DeleteShipModule(string id)
+        {
+            try
+            {
+                await _omenRepository.DeleteShipModuleById(id);
 
                 return Ok();
             }

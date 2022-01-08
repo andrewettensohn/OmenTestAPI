@@ -52,5 +52,6 @@ namespace OmenTestAPI.Data
 
         //Delete
         public async Task DeleteStarshipById(string id) => await _starshipCollection.DeleteOneAsync(x => x.Id == id);
+        public async Task DeleteShipModuleById(string id) => await _moduleCollection.DeleteOneAsync(x => x.Id == id);
     }
 }
